@@ -26,27 +26,6 @@
     "maxAge" : 0
   },
   "methods" : {
-    "dragnetendpoints.sayHelloByName" : {
-      "path" : "sayHelloByName",
-      "httpMethod" : "GET",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "replace this with your web client ID", "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "gov.wyo.dragnet.DragnetEndpoints.sayHelloByName",
-      "request" : {
-        "parameters" : {
-          "name" : {
-            "type" : "string",
-            "required" : true
-          }
-        },
-        "body" : "empty"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
     "dragnetendpoints.sayHello" : {
       "path" : "sayHello",
       "httpMethod" : "GET",
@@ -56,31 +35,6 @@
       "clientIds" : [ "replace this with your web client ID", "292824132082.apps.googleusercontent.com" ],
       "rosyMethod" : "gov.wyo.dragnet.DragnetEndpoints.sayHello",
       "request" : {
-        "body" : "empty"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
-    "dragnetendpoints.greetByPeriod" : {
-      "path" : "greetByPeriod",
-      "httpMethod" : "GET",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "replace this with your web client ID", "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "gov.wyo.dragnet.DragnetEndpoints.greetByPeriod",
-      "request" : {
-        "parameters" : {
-          "name" : {
-            "type" : "string",
-            "required" : true
-          },
-          "period" : {
-            "type" : "string",
-            "required" : true
-          }
-        },
         "body" : "empty"
       },
       "response" : {
@@ -101,17 +55,7 @@
       }
     },
     "methods" : {
-      "gov.wyo.dragnet.DragnetEndpoints.sayHelloByName" : {
-        "response" : {
-          "$ref" : "HelloClass"
-        }
-      },
       "gov.wyo.dragnet.DragnetEndpoints.sayHello" : {
-        "response" : {
-          "$ref" : "HelloClass"
-        }
-      },
-      "gov.wyo.dragnet.DragnetEndpoints.greetByPeriod" : {
         "response" : {
           "$ref" : "HelloClass"
         }
