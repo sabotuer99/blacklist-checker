@@ -1,0 +1,121 @@
+{
+  "extends" : "thirdParty.api",
+  "abstract" : false,
+  "root" : "https://dragnet-backend.appspot.com/_ah/api",
+  "name" : "dragnetendpoints",
+  "version" : "v1",
+  "description" : "API for dragnet endpoints.",
+  "defaultVersion" : false,
+  "discovery" : [ "PUBLIC" ],
+  "adapter" : {
+    "bns" : "https://dragnet-backend.appspot.com/_ah/spi",
+    "deadline" : 65.0,
+    "type" : "lily"
+  },
+  "auth" : {
+    "allowCookieAuth" : false
+  },
+  "frontendLimits" : {
+    "unregisteredUserQps" : -1,
+    "unregisteredQps" : -1,
+    "unregisteredDaily" : -1,
+    "rules" : [ ]
+  },
+  "cacheControl" : {
+    "type" : "no-cache",
+    "maxAge" : 0
+  },
+  "methods" : {
+    "dragnetendpoints.sayHelloByName" : {
+      "path" : "sayHelloByName",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "replace this with your web client ID", "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "gov.wyo.dragnet.DragnetEndpoints.sayHelloByName",
+      "request" : {
+        "parameters" : {
+          "name" : {
+            "type" : "string",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "dragnetendpoints.sayHello" : {
+      "path" : "sayHello",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "replace this with your web client ID", "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "gov.wyo.dragnet.DragnetEndpoints.sayHello",
+      "request" : {
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "dragnetendpoints.greetByPeriod" : {
+      "path" : "greetByPeriod",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "replace this with your web client ID", "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "gov.wyo.dragnet.DragnetEndpoints.greetByPeriod",
+      "request" : {
+        "parameters" : {
+          "name" : {
+            "type" : "string",
+            "required" : true
+          },
+          "period" : {
+            "type" : "string",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    }
+  },
+  "descriptor" : {
+    "schemas" : {
+      "HelloClass" : {
+        "id" : "HelloClass",
+        "type" : "object",
+        "properties" : {
+          "message" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "methods" : {
+      "gov.wyo.dragnet.DragnetEndpoints.sayHelloByName" : {
+        "response" : {
+          "$ref" : "HelloClass"
+        }
+      },
+      "gov.wyo.dragnet.DragnetEndpoints.sayHello" : {
+        "response" : {
+          "$ref" : "HelloClass"
+        }
+      },
+      "gov.wyo.dragnet.DragnetEndpoints.greetByPeriod" : {
+        "response" : {
+          "$ref" : "HelloClass"
+        }
+      }
+    }
+  }
+}
