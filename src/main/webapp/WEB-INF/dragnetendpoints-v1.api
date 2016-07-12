@@ -26,15 +26,21 @@
     "maxAge" : 0
   },
   "methods" : {
-    "dragnetendpoints.sayHello" : {
-      "path" : "sayHello",
+    "dragnetendpoints.check" : {
+      "path" : "check/{ip}",
       "httpMethod" : "GET",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
       "audiences" : [ ],
       "clientIds" : [ "replace this with your web client ID", "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "gov.wyo.dragnet.DragnetEndpoints.sayHello",
+      "rosyMethod" : "gov.wyo.dragnet.DragnetEndpoints.check",
       "request" : {
+        "parameters" : {
+          "ip" : {
+            "type" : "string",
+            "required" : true
+          }
+        },
         "body" : "empty"
       },
       "response" : {
@@ -44,20 +50,47 @@
   },
   "descriptor" : {
     "schemas" : {
-      "HelloClass" : {
-        "id" : "HelloClass",
+      "BLResult" : {
+        "id" : "BLResult",
         "type" : "object",
         "properties" : {
-          "message" : {
-            "type" : "string"
+          "honeyPotResult" : {
+            "$ref" : "HoneyPotResult"
+          },
+          "blackListHitCount" : {
+            "type" : "integer"
+          }
+        }
+      },
+      "HoneyPotResult" : {
+        "id" : "HoneyPotResult",
+        "type" : "object",
+        "properties" : {
+          "daysLastSeen" : {
+            "type" : "integer"
+          },
+          "threatScore" : {
+            "type" : "integer"
+          },
+          "isSearchEngine" : {
+            "type" : "boolean"
+          },
+          "isSuspicious" : {
+            "type" : "boolean"
+          },
+          "isHarvester" : {
+            "type" : "boolean"
+          },
+          "isCommentSpammer" : {
+            "type" : "boolean"
           }
         }
       }
     },
     "methods" : {
-      "gov.wyo.dragnet.DragnetEndpoints.sayHello" : {
+      "gov.wyo.dragnet.DragnetEndpoints.check" : {
         "response" : {
-          "$ref" : "HelloClass"
+          "$ref" : "BLResult"
         }
       }
     }

@@ -2,6 +2,7 @@ package gov.wyo.dragnet.blacklist;
 
 import static org.junit.Assert.*;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class QueryTests {
@@ -30,6 +31,7 @@ public class QueryTests {
 		assertEquals("0000:0000:0000:0000:FE01:AC10:0DB8:2001", result);
 	}
 	
+	@Ignore
 	@Test
 	public void getHitCount_productionList() {
 		//Arrange
@@ -40,6 +42,35 @@ public class QueryTests {
 		
 		//Assert
 		assertTrue(true);
+	}
+
+	@Test
+	public void getProjectHoneypotResult_testValue_allFieldsSetCorrect() {
+		//Arrange
+		Query sut = new Query("127.1.1.7");
+		
+		//Act
+		HoneyPotResult result =  sut.getProjectHoneypotResult();
+		
+		//Assert
+		assertFalse(result.isSearchEngine);
+		assertTrue(result.isSuspicious);
+		assertTrue(result.isHarvester);
+		assertTrue(result.isCommentSpammer);
+		assertEquals(1, result.daysLastSeen);
+		assertEquals(1, result.threatScore);
+	}
+	
+	@Test
+	public void getProjectHoneypotResult_testNoResult_returnsNull() {
+		//Arrange
+		Query sut = new Query("127.0.0.1");
+		
+		//Act
+		HoneyPotResult result =  sut.getProjectHoneypotResult();
+		
+		//Assert
+		assertNull(result);
 	}
 
 }

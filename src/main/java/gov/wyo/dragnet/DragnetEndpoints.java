@@ -1,5 +1,8 @@
 package gov.wyo.dragnet;
 
+import gov.wyo.dragnet.blacklist.Blacklist;
+import gov.wyo.dragnet.blacklist.Query;
+
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiMethod.HttpMethod;
@@ -14,11 +17,17 @@ scopes = {Constants.EMAIL_SCOPE },
         description = "API for dragnet endpoints.")
 
 public class DragnetEndpoints {
-
-   // Declare this method as a method available externally through Endpoints
-    @ApiMethod(name = "sayHello", path = "sayHello", httpMethod = HttpMethod.GET)
-    public HelloClass sayHello() {
-        return new HelloClass("Dummy");
+    
+    @ApiMethod(name = "check", httpMethod = HttpMethod.GET)
+    public BLResult check(@Named("ip") String ip){
+    	
+    	Query q = new Query(ip);
+    	
+    	BLResult result = new BLResult();
+    	result.blackListHitCount = q.getHitCount(Blacklist.dnsBlacklists);
+    	result.honeyPotResult = q.getProjectHoneypotResult();  	
+    	
+    	return result;
     }
 
 }
