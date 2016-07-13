@@ -85,6 +85,8 @@ public class Query {
 			} catch (UnknownHostException e) {
 				//System.out.println(bl + " failed:" + e.getMessage());
 				// Gulp
+			} catch (Exception e){
+				System.out.println(bl + " failed, but we're moving on...:" + e.getMessage());
 			}
 			long duration =  System.currentTimeMillis() - start;
 			System.out.println("Query of " + bl + " took " + duration);
