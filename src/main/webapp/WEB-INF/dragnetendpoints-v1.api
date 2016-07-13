@@ -46,6 +46,27 @@
       "response" : {
         "body" : "autoTemplate(backendResponse)"
       }
+    },
+    "dragnetendpoints.dshield" : {
+      "path" : "dshield/{ip}",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "replace this with your web client ID", "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "gov.wyo.dragnet.DragnetEndpoints.dshield",
+      "request" : {
+        "parameters" : {
+          "ip" : {
+            "type" : "string",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
     }
   },
   "descriptor" : {
@@ -58,6 +79,9 @@
             "$ref" : "HoneyPotResult"
           },
           "blackListHitCount" : {
+            "type" : "integer"
+          },
+          "dSheildCount" : {
             "type" : "integer"
           }
         }
@@ -89,6 +113,11 @@
     },
     "methods" : {
       "gov.wyo.dragnet.DragnetEndpoints.check" : {
+        "response" : {
+          "$ref" : "BLResult"
+        }
+      },
+      "gov.wyo.dragnet.DragnetEndpoints.dshield" : {
         "response" : {
           "$ref" : "BLResult"
         }

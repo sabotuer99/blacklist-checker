@@ -2,8 +2,11 @@ package gov.wyo.dragnet.blacklist;
 
 import static org.junit.Assert.*;
 
+
+
 import org.junit.Ignore;
 import org.junit.Test;
+
 
 public class QueryTests {
 
@@ -35,10 +38,11 @@ public class QueryTests {
 	@Test
 	public void getHitCount_productionList() {
 		//Arrange
-		Query sut = new Query("159.238.66.51");
+		Query sut = new Query("127.0.0.2");
 		
 		//Act
-		sut.getHitCount(Blacklist.dnsBlacklists);
+		int count = sut.getHitCount(Blacklist.dnsBlacklists);
+		System.out.println(count);
 		
 		//Assert
 		assertTrue(true);
@@ -72,5 +76,57 @@ public class QueryTests {
 		//Assert
 		assertNull(result);
 	}
+	
+	@Ignore
+	@Test
+	public void getHitCount_experimentalList() {
+		//Arrange
+		Query sut = new Query("74.208.45.171");
+		
+		String[] bl = {
+			"dnsbl.tornevall.org",
+			"dnsbl.abuse.ch",
+			"bl.blocklist.de",
+			"bl.spamcop.net",
+			"black.uribl.com",
+			"multi.surbl.org"
+		};
+		
+		//Act
+		sut.getHitCount(bl);
+		
+		//Assert
+		assertTrue(true);
+	}
+	
+	//this test is no good because URLFetchService doesn't work locally
+	@Ignore
+	@Test
+	public void getDShieldCount_sanityCheck() {
+		//Arrange
+		Query sut = new Query("70.91.145.10");
+		
+		//Act
+		sut.getDShieldCount();
+		
+		//Assert
+		assertTrue(true);
+	}
+	
+	@Test
+	public void parseDShieldResponse_GivenKnownResponse_ReturnsCorrectValue(){
+		//Arrange
+		String response = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><ip><number>70.91.145.10</number><count>1477</count><attacks></attacks><maxdate></maxdate><mindate></mindate><updated></updated><comment></comment><maxrisk></maxrisk><asabusecontact>abuse@comcast.net</asabusecontact><as>7922</as><asname><![CDATA[COMCAST-7922 - Comcast Cable Communications, Inc.,]]></asname><ascountry>US</ascountry><assize>66192817</assize><network>70.88.0.0/14</network></ip>";
+		Query sut = new Query();
+		
+		//Act
+		int actual = sut.parseDShieldResult(response);
+		
+		//Assert
+		assertEquals(1477, actual);
+		
+	}
+	
+
 
 }

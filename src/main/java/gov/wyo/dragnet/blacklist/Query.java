@@ -1,15 +1,36 @@
 package gov.wyo.dragnet.blacklist;
 
+import java.io.ByteArrayInputStream;
+import java.io.StringReader;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.xml.sax.InputSource;
+
+import com.google.appengine.api.urlfetch.HTTPRequest;
+
+import java.io.StringReader;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+
 import gov.wyo.dragnet.Constants;
+import gov.wyo.dragnet.helpers.HttpHelper;
 
 
 public class Query {
@@ -102,20 +123,30 @@ public class Query {
 		return hpr;
 	}
 
-	/* THIS IS WAAAAY MORE INVOLVED THEN IT NEES TO BE
-	public int getThreat(String ip){
-		
-		String regex = "^(?:[0-9]{1,3}\\.[0-9]{1,3}\\.([0-9]{1,3})\\.[0-9]{1,3})$";
-		Pattern pattern = Pattern.compile(regex);
-		Matcher matcher = pattern.matcher(ip);
-		
-		int threat = 0;
-		if(matcher.find()){
-			threat = Integer.parseInt(matcher.group(1));
+	public int getDShieldCount(){
+		try {
+			String url = "https://dshield.org/api/ip/" + ip;
+			String response = HttpHelper.doGet(url);
+			
+			return parseDShieldResult(response);
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
 		}
 		
-		return threat;
-	}*/
+		return 0;
+	}
+	
+	public int parseDShieldResult(String result){
+		
+		String regex = "<count>(.*)</count>";
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(result);
+		if(matcher.find()){
+			return Integer.parseInt(matcher.group(1));
+		}		
+		return 0;
+	}
 	
 	public void setIp(String ip){
 		this.revip = reverseIp(ip);

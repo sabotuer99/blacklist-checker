@@ -6,4 +6,5 @@ public class BLResult {
 
 	public HoneyPotResult honeyPotResult;
 	public int blackListHitCount;
+	public int dSheildCount;
 }

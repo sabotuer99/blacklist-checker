@@ -26,7 +26,16 @@ public class DragnetEndpoints {
     	BLResult result = new BLResult();
     	result.blackListHitCount = q.getHitCount(Blacklist.dnsBlacklists);
     	result.honeyPotResult = q.getProjectHoneypotResult();  	
+    	result.dSheildCount = q.getDShieldCount();
+    	return result;
+    }
+    
+    @ApiMethod(name = "dshield", httpMethod = HttpMethod.GET)
+    public BLResult dshield(@Named("ip") String ip){
     	
+    	Query q = new Query(ip);
+    	BLResult result = new BLResult();
+    	result.dSheildCount = q.getDShieldCount();
     	return result;
     }
 
