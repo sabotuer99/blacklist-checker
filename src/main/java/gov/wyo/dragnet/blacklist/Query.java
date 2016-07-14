@@ -1,36 +1,23 @@
 package gov.wyo.dragnet.blacklist;
 
-import java.io.ByteArrayInputStream;
-import java.io.StringReader;
+import gov.wyo.dragnet.Constants;
+import gov.wyo.dragnet.helpers.HttpHelper;
+
 import java.net.InetAddress;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadFactory;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.xml.sax.InputSource;
-
-import com.google.appengine.api.urlfetch.HTTPRequest;
-
-import java.io.StringReader;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
-
-import gov.wyo.dragnet.Constants;
-import gov.wyo.dragnet.helpers.HttpHelper;
+import com.google.appengine.api.ThreadManager;
 
 
 public class Query {
@@ -72,27 +59,85 @@ public class Query {
 		return reversed;
 	}
 	
+	/* Old synchronous version
 	public int getHitCount(String[] bls){
 		
 		int count = 0;
-		for(String bl : bls){
-			long start =  System.currentTimeMillis();
+		for(String bl : bls){			
 			String host = revip + "." + bl;
-			try {
-				InetAddress result = InetAddress.getByName(host);
-				System.out.println(result.toString());
+			if(isHit(host))
 				count++;
-			} catch (UnknownHostException e) {
-				//System.out.println(bl + " failed:" + e.getMessage());
-				// Gulp
-			} catch (Exception e){
-				System.out.println(bl + " failed, but we're moving on...:" + e.getMessage());
-			}
-			long duration =  System.currentTimeMillis() - start;
-			System.out.println("Query of " + bl + " took " + duration);
 		}
 		
 		return count;
+	}*/
+	
+	//same as get hit count, but uses isHitAsnyc
+	public int getHitCount(String[] bls){
+		
+		int count = 0;
+		List<Future<Boolean>> futes = new ArrayList<Future<Boolean>>();
+		//get everybody started
+		for(String bl : bls){			
+			String host = revip + "." + bl;
+			futes.add(isHitAsync(host));
+		}
+		
+		//rack up the results
+		for(Future<Boolean> result : futes){
+			try {
+				if(result.get())
+					count++;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+			
+		return count;
+	}
+
+	public boolean isHit(String host) {
+		long start =  System.currentTimeMillis();
+	    boolean isHit = false;
+		
+		try {
+			InetAddress result = InetAddress.getByName(host);			
+			System.out.println(result.toString());
+			isHit = true;
+		} catch (UnknownHostException e) {
+			//System.out.println(bl + " failed:" + e.getMessage());
+			// Gulp
+		} catch (Exception e){
+			System.out.println(host + " failed, but we're moving on...:" + e.getMessage());
+		}
+		long duration =  System.currentTimeMillis() - start;
+		System.out.println("Query of " + host + " took " + duration);
+		return isHit;
+	}
+	
+	//private final ThreadFactory factory = ThreadManager.currentRequestThreadFactory();
+	//private final ExecutorService pool = Executors.newCachedThreadPool(factory);
+	public Future<Integer> getHitCountAsync(final String[] bls){
+
+		ExecutorService pool = getPool();
+		
+		return pool.submit(new Callable<Integer>() {
+			
+			public Integer call() throws Exception {
+				return getHitCount(bls);
+			}
+			
+		});
+	}
+	
+	
+	public Future<Boolean> isHitAsync(final String host){		
+		ExecutorService pool = getPool();		
+		return pool.submit(new Callable<Boolean>() {			
+			public Boolean call() throws Exception {
+				return isHit(host);			
+			}		
+		});
 	}
 	
 	public HoneyPotResult getProjectHoneypotResult(){
@@ -153,5 +198,29 @@ public class Query {
 	public void setIp(String ip){
 		this.revip = reverseIp(ip);
 		this.ip = ip;
+	}
+	
+	
+	private ExecutorService pool = null;
+	private ExecutorService getPool(){
+		
+		if(this.pool == null){
+		
+			ThreadFactory factory = null;
+			try{ 
+				factory = ThreadManager.currentRequestThreadFactory();
+			} catch (Exception ex) {
+				
+			}			
+			
+			if(factory != null) {
+				pool = Executors.newFixedThreadPool(49, factory);
+			} else {
+				pool = Executors.newFixedThreadPool(49);
+			}
+		}
+		
+		return pool;
+		
 	}
 }

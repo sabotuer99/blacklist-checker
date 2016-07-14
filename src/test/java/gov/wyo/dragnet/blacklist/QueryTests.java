@@ -38,7 +38,7 @@ public class QueryTests {
 	@Test
 	public void getHitCount_productionList() {
 		//Arrange
-		Query sut = new Query("127.0.0.2");
+		Query sut = new Query("127.0.0.7");
 		
 		//Act
 		int count = sut.getHitCount(Blacklist.dnsBlacklists);
@@ -77,7 +77,6 @@ public class QueryTests {
 		assertNull(result);
 	}
 	
-	@Ignore
 	@Test
 	public void getHitCount_experimentalList() {
 		//Arrange
