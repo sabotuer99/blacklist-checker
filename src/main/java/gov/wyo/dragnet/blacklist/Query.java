@@ -170,6 +170,15 @@ public class Query {
 		return hpr;
 	}
 
+	public Future<HoneyPotResult> getProjectHoneypotResultAsync(){
+		ExecutorService pool = getPool();		
+		return pool.submit(new Callable<HoneyPotResult>() {			
+			public HoneyPotResult call() throws Exception {
+				return getProjectHoneypotResult();			
+			}		
+		});	
+	}
+	
 	public int getDShieldCount(){
 		try {
 			String url = "https://dshield.org/api/ip/" + ip;
@@ -182,6 +191,15 @@ public class Query {
 		}
 		
 		return 0;
+	}
+	
+	public Future<Integer> getDShieldCountAsync(){
+		ExecutorService pool = getPool();		
+		return pool.submit(new Callable<Integer>() {			
+			public Integer call() throws Exception {
+				return getDShieldCount();			
+			}		
+		});	
 	}
 	
 	public int parseDShieldResult(String result){
@@ -200,7 +218,7 @@ public class Query {
 		this.ip = ip;
 	}
 	
-	
+	//pool has to be a singleton
 	private ExecutorService pool = null;
 	private ExecutorService getPool(){
 		
@@ -221,6 +239,5 @@ public class Query {
 		}
 		
 		return pool;
-		
 	}
 }

@@ -77,6 +77,7 @@ public class QueryTests {
 		assertNull(result);
 	}
 	
+	@Ignore
 	@Test
 	public void getHitCount_experimentalList() {
 		//Arrange

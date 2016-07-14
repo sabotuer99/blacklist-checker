@@ -1,6 +1,9 @@
 package gov.wyo.dragnet;
 
+import java.util.concurrent.Future;
+
 import gov.wyo.dragnet.blacklist.Blacklist;
+import gov.wyo.dragnet.blacklist.HoneyPotResult;
 import gov.wyo.dragnet.blacklist.Query;
 
 import com.google.api.server.spi.config.Api;
@@ -23,10 +26,24 @@ public class DragnetEndpoints {
     	
     	Query q = new Query(ip);
     	
+    	Future<HoneyPotResult> hpr = q.getProjectHoneypotResultAsync();
+    	Future<Integer> dsr = q.getDShieldCountAsync();
+    	Future<Integer> blc = q.getHitCountAsync(Blacklist.dnsBlacklists);
+    	
     	BLResult result = new BLResult();
-    	result.blackListHitCount = q.getHitCount(Blacklist.dnsBlacklists);
-    	result.honeyPotResult = q.getProjectHoneypotResult();  	
+    	/*
+    	result.honeyPotResult = q.getProjectHoneypotResult();
     	result.dSheildCount = q.getDShieldCount();
+    	result.blackListHitCount = q.getHitCount(Blacklist.dnsBlacklists);
+    	*/
+    	try{
+	    	result.honeyPotResult = hpr.get();
+	    	result.dSheildCount = dsr.get();
+	    	result.blackListHitCount = blc.get();
+    	} catch (Exception ex){
+    		result = null;
+    	}
+    	
     	return result;
     }
     
